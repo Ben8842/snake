@@ -4,22 +4,218 @@ import "./App.css";
 class App extends Component {
   constructor(props) {
     super(props);
-    this.state = {
-      pathO: [[0, 0]],
-      flagStart: false,
-    };
-  }
-
-  renderSquare(x, y) {
-    var { pathO, flagStart } = this.state;
-
     function randomNumber(min, max) {
       return Math.floor(Math.random() * (max - min)) + min;
     }
+    this.state = {
+      pathO: [[0, 0]],
+      flagStart: false,
+      screenSize: 25,
+      food: [
+        [randomNumber(3, 25), randomNumber(3, 25)],
+        [randomNumber(3, 25), randomNumber(3, 25)],
+        [randomNumber(3, 25), randomNumber(3, 25)],
+      ],
+      spot: [0, 0],
+      trailingSpot: [[0, 0]],
+      foodAmount: 0,
+    };
   }
 
   begin() {
     console.log("begin");
+    this.setState({ flagStart: true });
+    this.originInterval();
+  }
+
+  originInterval() {
+    var interval = setInterval(this.goFast.bind(this), 250);
+    this.setState({ interval: interval });
+  }
+
+  downInterval() {
+    var interval = setInterval(this.goDown.bind(this), 250);
+    this.setState({ interval: interval });
+  }
+
+  leftInterval() {
+    var interval = setInterval(this.goLeft.bind(this), 250);
+    this.setState({ interval: interval });
+  }
+
+  upInterval() {
+    var interval = setInterval(this.goUp.bind(this), 250);
+    this.setState({ interval: interval });
+  }
+
+  rightInterval() {
+    var interval = setInterval(this.goRight.bind(this), 250);
+    this.setState({ interval: interval });
+  }
+
+  goFast() {
+    if (this.state.spot[0] < this.state.screenSize - 1) {
+      this.setState({ spot: [this.state.spot[0] + 1, this.state.spot[1]] });
+      console.log(this.state.spot);
+    } else this.setState({ spot: [0, this.state.spot[1]] });
+  }
+
+  goDown() {
+    if (this.state.spot[1] < this.state.screenSize - 1) {
+      this.setState({ spot: [this.state.spot[0], this.state.spot[1] + 1] });
+      console.log(this.state.spot);
+    } else this.setState({ spot: [this.state.spot[0], 0] });
+  }
+
+  goLeft() {
+    if (this.state.spot[0] > 0) {
+      this.setState({ spot: [this.state.spot[0] - 1, this.state.spot[1]] });
+      console.log(this.state.spot);
+    } else
+      this.setState({ spot: [this.state.screenSize - 1, this.state.spot[1]] });
+  }
+
+  goUp() {
+    if (this.state.spot[1] > 0) {
+      this.setState({ spot: [this.state.spot[0], this.state.spot[1] - 1] });
+      console.log(this.state.spot);
+    } else
+      this.setState({ spot: [this.state.spot[0], this.state.screenSize - 1] });
+  }
+
+  goRight() {
+    if (this.state.spot[0] < this.state.screenSize - 1) {
+      this.setState({ spot: [this.state.spot[0] + 1, this.state.spot[1]] });
+      console.log(this.state.spot);
+    } else this.setState({ spot: [0, this.state.spot[1]] });
+  }
+
+  stop() {
+    clearInterval(this.state.interval);
+    console.log(this.state.spot);
+  }
+
+  downMove() {
+    clearInterval(this.state.interval);
+    console.log(this.state.spot);
+    this.downInterval();
+  }
+
+  upMove() {
+    clearInterval(this.state.interval);
+    console.log(this.state.spot);
+    this.upInterval();
+  }
+
+  leftMove() {
+    clearInterval(this.state.interval);
+    console.log(this.state.spot);
+    this.leftInterval();
+  }
+
+  rightMove() {
+    clearInterval(this.state.interval);
+    console.log(this.state.spot);
+    this.rightInterval();
+  }
+
+  renderControl(x, y) {
+    if (
+      (x == 0 && y == 0) |
+      (x == 2 && y == 0) |
+      (x == 0 && y == 2) |
+      (x == 2 && y == 2)
+    ) {
+      return <button class="bgrey" codeX={x} codeY={y}></button>;
+    } else if (x == 1 && y == 0) {
+      return (
+        <button
+          class="bdirection"
+          codeX={x}
+          codeY={y}
+          onClick={() => this.upMove()}
+        ></button>
+      );
+    } else if (x == 0 && y == 1) {
+      return (
+        <button
+          class="bdirection"
+          codeX={x}
+          codeY={y}
+          onClick={() => this.leftMove()}
+        ></button>
+      );
+    } else if (x == 2 && y == 1) {
+      return (
+        <button
+          class="bdirection"
+          codeX={x}
+          codeY={y}
+          onClick={() => this.rightMove()}
+        ></button>
+      );
+    } else if (x == 1 && y == 2) {
+      return (
+        <button
+          class="bdirection"
+          codeX={x}
+          codeY={y}
+          onClick={() => this.downMove()}
+        ></button>
+      );
+    } else return <button class="bdirection" codeX={x} codeY={y}></button>;
+  }
+
+  foodFound() {
+    console.log("YOUFOUNDFOODs");
+    function randomNumber(min, max) {
+      return Math.floor(Math.random() * (max - min)) + min;
+    }
+    this.setState({
+      food: [
+        [randomNumber(3, 25), randomNumber(3, 25)],
+        [randomNumber(3, 25), randomNumber(3, 25)],
+        [randomNumber(3, 25), randomNumber(3, 25)],
+      ],
+    });
+  }
+
+  renderSquare(x, y) {
+    var { pathO, food, spot } = this.state;
+
+    /* function randomNumber(min, max) {
+      return Math.floor(Math.random() * (max - min)) + min;
+    }*/
+    // console.log(food);
+    // console.log(food[0][1]);
+    // console.log(food[0][0]);
+    if (x == spot[0] && y == spot[1]) {
+      return <button class="b2" codeX={x} codeY={y}></button>;
+    }
+
+    if (spot[0] == food[0][0] && spot[1] == food[0][1]) {
+      this.foodFound();
+    }
+
+    if (spot[0] == food[1][0] && spot[1] == food[1][1]) {
+      this.foodFound();
+    }
+
+    if (spot[0] == food[2][0] && spot[1] == food[2][1]) {
+      this.foodFound();
+    }
+
+    if (x == food[0][0] && y == food[0][1]) {
+      return <button class="bplus" codeX={x} codeY={y}></button>;
+    }
+    if (x == food[1][0] && y == food[1][1]) {
+      return <button class="bplus" codeX={x} codeY={y}></button>;
+    }
+    if (x == food[2][0] && y == food[2][1]) {
+      return <button class="bplus" codeX={x} codeY={y}></button>;
+    }
+
+    return <button class="b1" codeX={x} codeY={y}></button>;
   }
 
   render() {
@@ -32,6 +228,21 @@ class App extends Component {
     const bray = [];
     var a;
     var b;
+    for (a = 0; a < 3; a++) {
+      for (b = 0; b < 3; b++) {
+        aray.push(<span>{this.renderControl(b, a)}</span>);
+      }
+      bray.push(
+        <div className="newLineC">
+          {aray.map((value, index) => {
+            return <span key={index}>{value}</span>;
+          })}
+        </div>
+      );
+      for (b = 0; b < 9; b++) {
+        aray.pop();
+      }
+    }
     //control section
 
     var x;
@@ -57,6 +268,9 @@ class App extends Component {
         <button id="largebutton" onClick={() => this.begin()}>
           Click to Start
         </button>
+        <button id="largebutton" onClick={() => this.stop()}>
+          Click to Stop
+        </button>
       </div>
     );
 
@@ -79,8 +293,7 @@ class App extends Component {
 
     return (
       <div>
-        Hello World
-        <p>More!</p>
+        <div></div>
         {entireThingz}
       </div>
     );
