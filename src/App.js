@@ -25,7 +25,7 @@ class App extends Component {
       spot: [0, 0],
       trailingSpot: [[0, 0]],
       foodAmount: 0,
-      speed: [400, 250, 200, 175, 150, 125, 100, 75, 50],
+      speed: [250, 200, 175, 150, 140, 120, 110, 85, 50],
     };
   }
 
