@@ -25,7 +25,33 @@ class App extends Component {
       spot: [0, 0],
       trailingSpot: [[0, 0]],
       foodAmount: 0,
+      speed: [400, 250, 200, 175, 150, 125, 100, 75, 50],
     };
+  }
+
+  speedCalculation() {
+    var { speed, foodAmount } = this.state;
+    var x;
+    if (foodAmount < 2) {
+      x = 0;
+    } else if (foodAmount < 5) {
+      x = 1;
+    } else if (foodAmount < 8) {
+      x = 2;
+    } else if (foodAmount < 11) {
+      x = 3;
+    } else if (foodAmount < 14) {
+      x = 4;
+    } else if (foodAmount < 18) {
+      x = 5;
+    } else if (foodAmount < 22) {
+      x = 6;
+    } else if (foodAmount < 27) {
+      x = 7;
+    } else if (foodAmount < 33) {
+      x = 8;
+    }
+    return speed[x];
   }
 
   begin() {
@@ -35,27 +61,30 @@ class App extends Component {
   }
 
   originInterval() {
-    var interval = setInterval(this.goFast.bind(this), 100);
+    var interval = setInterval(this.goFast.bind(this), this.speedCalculation());
     this.setState({ interval: interval });
   }
 
   downInterval() {
-    var interval = setInterval(this.goDown.bind(this), 100);
+    var interval = setInterval(this.goDown.bind(this), this.speedCalculation());
     this.setState({ interval: interval });
   }
 
   leftInterval() {
-    var interval = setInterval(this.goLeft.bind(this), 100);
+    var interval = setInterval(this.goLeft.bind(this), this.speedCalculation());
     this.setState({ interval: interval });
   }
 
   upInterval() {
-    var interval = setInterval(this.goUp.bind(this), 100);
+    var interval = setInterval(this.goUp.bind(this), this.speedCalculation());
     this.setState({ interval: interval });
   }
 
   rightInterval() {
-    var interval = setInterval(this.goRight.bind(this), 100);
+    var interval = setInterval(
+      this.goRight.bind(this),
+      this.speedCalculation()
+    );
     this.setState({ interval: interval });
   }
 
@@ -255,19 +284,19 @@ class App extends Component {
     }
 
     if (foodAmount > 0) {
-      for (var t = 1; t < foodAmount; t++) {
+      for (var t = 1; t < foodAmount * 3; t++) {
         if (
           x ==
             pathO[
-              pathO.length - foodAmount + t < 0
+              pathO.length - foodAmount * 3 + t < 0
                 ? 0
-                : pathO.length - foodAmount + t
+                : pathO.length - foodAmount * 3 + t
             ][0] &&
           y ==
             pathO[
-              pathO.length - foodAmount + t < 0
+              pathO.length - foodAmount * 3 + t < 0
                 ? 0
-                : pathO.length - foodAmount + t
+                : pathO.length - foodAmount * 3 + t
             ][1]
         ) {
           return <button class="b2" codeX={x} codeY={y}></button>;
