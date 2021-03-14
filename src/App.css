@@ -11,6 +11,15 @@
   width: 38px;
 }
 
+p {
+  color: white;
+}
+h1 {
+  color: lightgreen;
+}
+body {
+  background-color: black;
+}
 .b1 {
   border: none;
   border-color: none;
@@ -726,5 +735,15 @@ button:focus {
 
   .directionLand {
     position: fixed;
+  }
+
+  p {
+    color: white;
+  }
+  h1 {
+    color: lightgreen;
+  }
+  body {
+    background-color: black;
   }
 }

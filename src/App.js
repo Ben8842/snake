@@ -8,7 +8,13 @@ class App extends Component {
       return Math.floor(Math.random() * (max - min)) + min;
     }
     this.state = {
-      pathO: [[0, 0]],
+      pathO: [
+        [0, 0],
+        [0, 0],
+        [0, 0],
+        [0, 0],
+        [0, 0],
+      ],
       flagStart: false,
       screenSize: 25,
       food: [
@@ -29,65 +35,98 @@ class App extends Component {
   }
 
   originInterval() {
-    var interval = setInterval(this.goFast.bind(this), 250);
+    var interval = setInterval(this.goFast.bind(this), 100);
     this.setState({ interval: interval });
   }
 
   downInterval() {
-    var interval = setInterval(this.goDown.bind(this), 250);
+    var interval = setInterval(this.goDown.bind(this), 100);
     this.setState({ interval: interval });
   }
 
   leftInterval() {
-    var interval = setInterval(this.goLeft.bind(this), 250);
+    var interval = setInterval(this.goLeft.bind(this), 100);
     this.setState({ interval: interval });
   }
 
   upInterval() {
-    var interval = setInterval(this.goUp.bind(this), 250);
+    var interval = setInterval(this.goUp.bind(this), 100);
     this.setState({ interval: interval });
   }
 
   rightInterval() {
-    var interval = setInterval(this.goRight.bind(this), 250);
+    var interval = setInterval(this.goRight.bind(this), 100);
     this.setState({ interval: interval });
   }
 
   goFast() {
     if (this.state.spot[0] < this.state.screenSize - 1) {
-      this.setState({ spot: [this.state.spot[0] + 1, this.state.spot[1]] });
+      this.setState({
+        spot: [this.state.spot[0] + 1, this.state.spot[1]],
+        pathO: [...this.state.pathO, this.state.spot],
+      });
       console.log(this.state.spot);
-    } else this.setState({ spot: [0, this.state.spot[1]] });
+    } else
+      this.setState({
+        spot: [0, this.state.spot[1]],
+        pathO: [...this.state.pathO, this.state.spot],
+      });
   }
 
   goDown() {
     if (this.state.spot[1] < this.state.screenSize - 1) {
-      this.setState({ spot: [this.state.spot[0], this.state.spot[1] + 1] });
-      console.log(this.state.spot);
-    } else this.setState({ spot: [this.state.spot[0], 0] });
+      this.setState({
+        spot: [this.state.spot[0], this.state.spot[1] + 1],
+        pathO: [...this.state.pathO, this.state.spot],
+      });
+      //  console.log(this.state.spot);
+    } else
+      this.setState({
+        spot: [this.state.spot[0], 0],
+        pathO: [...this.state.pathO, this.state.spot],
+      });
   }
 
   goLeft() {
     if (this.state.spot[0] > 0) {
-      this.setState({ spot: [this.state.spot[0] - 1, this.state.spot[1]] });
-      console.log(this.state.spot);
+      this.setState({
+        spot: [this.state.spot[0] - 1, this.state.spot[1]],
+        pathO: [...this.state.pathO, this.state.spot],
+      });
+      // console.log(this.state.spot);
     } else
-      this.setState({ spot: [this.state.screenSize - 1, this.state.spot[1]] });
+      this.setState({
+        spot: [this.state.screenSize - 1, this.state.spot[1]],
+        pathO: [...this.state.pathO, this.state.spot],
+      });
   }
 
   goUp() {
     if (this.state.spot[1] > 0) {
-      this.setState({ spot: [this.state.spot[0], this.state.spot[1] - 1] });
-      console.log(this.state.spot);
+      this.setState({
+        spot: [this.state.spot[0], this.state.spot[1] - 1],
+        pathO: [...this.state.pathO, this.state.spot],
+      });
+      // console.log(this.state.spot);
     } else
-      this.setState({ spot: [this.state.spot[0], this.state.screenSize - 1] });
+      this.setState({
+        spot: [this.state.spot[0], this.state.screenSize - 1],
+        pathO: [...this.state.pathO, this.state.spot],
+      });
   }
 
   goRight() {
     if (this.state.spot[0] < this.state.screenSize - 1) {
-      this.setState({ spot: [this.state.spot[0] + 1, this.state.spot[1]] });
-      console.log(this.state.spot);
-    } else this.setState({ spot: [0, this.state.spot[1]] });
+      this.setState({
+        spot: [this.state.spot[0] + 1, this.state.spot[1]],
+        pathO: [...this.state.pathO, this.state.spot],
+      });
+      // console.log(this.state.spot);
+    } else
+      this.setState({
+        spot: [0, this.state.spot[1]],
+        pathO: [...this.state.pathO, this.state.spot],
+      });
   }
 
   stop() {
@@ -177,11 +216,13 @@ class App extends Component {
         [randomNumber(3, 25), randomNumber(3, 25)],
         [randomNumber(3, 25), randomNumber(3, 25)],
       ],
+      foodAmount: this.state.foodAmount + 1,
     });
   }
 
   renderSquare(x, y) {
-    var { pathO, food, spot } = this.state;
+    var { pathO, food, spot, foodAmount } = this.state;
+    var maxTail = { foodAmount };
 
     /* function randomNumber(min, max) {
       return Math.floor(Math.random() * (max - min)) + min;
@@ -189,8 +230,49 @@ class App extends Component {
     // console.log(food);
     // console.log(food[0][1]);
     // console.log(food[0][0]);
+
     if (x == spot[0] && y == spot[1]) {
       return <button class="b2" codeX={x} codeY={y}></button>;
+    }
+
+    if (
+      x == pathO[pathO.length - 1 < 0 ? 0 : pathO.length - 1][0] &&
+      y == pathO[pathO.length - 1 < 0 ? 0 : pathO.length - 1][1]
+    ) {
+      return <button class="b2" codeX={x} codeY={y}></button>;
+    }
+
+    if (
+      foodAmount == 2 &&
+      x ==
+        pathO[
+          pathO.length - foodAmount < 0 ? 0 : pathO.length - foodAmount
+        ][0] &&
+      y ==
+        pathO[pathO.length - foodAmount < 0 ? 0 : pathO.length - foodAmount][1]
+    ) {
+      return <button class="b2" codeX={x} codeY={y}></button>;
+    }
+
+    if (foodAmount > 0) {
+      for (var t = 1; t < foodAmount; t++) {
+        if (
+          x ==
+            pathO[
+              pathO.length - foodAmount + t < 0
+                ? 0
+                : pathO.length - foodAmount + t
+            ][0] &&
+          y ==
+            pathO[
+              pathO.length - foodAmount + t < 0
+                ? 0
+                : pathO.length - foodAmount + t
+            ][1]
+        ) {
+          return <button class="b2" codeX={x} codeY={y}></button>;
+        }
+      }
     }
 
     if (spot[0] == food[0][0] && spot[1] == food[0][1]) {
@@ -219,7 +301,7 @@ class App extends Component {
   }
 
   render() {
-    var { pathO, flagStart } = this.state;
+    var { pathO, flagStart, foodAmount } = this.state;
     const elementS = [];
     const elementZ = [];
     const screenSize = 25;
@@ -265,12 +347,14 @@ class App extends Component {
 
     const startButton = (
       <div>
+        <h1>SNAKE GAME</h1>
         <button id="largebutton" onClick={() => this.begin()}>
           Click to Start
         </button>
         <button id="largebutton" onClick={() => this.stop()}>
           Click to Stop
         </button>
+        <p>Your snake has found {foodAmount} food</p>
       </div>
     );
 
