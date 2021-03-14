@@ -29,6 +29,32 @@ class App extends Component {
     };
   }
 
+  reset() {
+    function randomNumber(min, max) {
+      return Math.floor(Math.random() * (max - min)) + min;
+    }
+    this.setState({
+      pathO: [
+        [0, 0],
+        [0, 0],
+        [0, 0],
+        [0, 0],
+        [0, 0],
+      ],
+      flagStart: false,
+      screenSize: 25,
+      food: [
+        [randomNumber(3, 25), randomNumber(3, 25)],
+        [randomNumber(3, 25), randomNumber(3, 25)],
+        [randomNumber(3, 25), randomNumber(3, 25)],
+      ],
+      spot: [0, 0],
+      trailingSpot: [[0, 0]],
+      foodAmount: 0,
+      speed: [250, 200, 175, 150, 140, 120, 110, 85, 50],
+    });
+  }
+
   speedCalculation() {
     var { speed, foodAmount } = this.state;
     var x;
@@ -382,6 +408,9 @@ class App extends Component {
         </button>
         <button id="largebutton" onClick={() => this.stop()}>
           Click to Stop
+        </button>
+        <button id="largebutton" onClick={() => this.reset()}>
+          Play Again
         </button>
         <p>Your snake has found {foodAmount} food</p>
       </div>
