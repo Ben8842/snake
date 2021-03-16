@@ -134,6 +134,7 @@ class App extends Component {
         spot: [this.state.spot[0], this.state.spot[1] + 1],
         pathO: [...this.state.pathO, this.state.spot],
       });
+      console.log(this.state.pathO);
       //  console.log(this.state.spot);
     } else
       this.setState({
@@ -403,12 +404,7 @@ class App extends Component {
     const startButton = (
       <div>
         <h1>SNAKE GAME</h1>
-        <button id="largebutton" onClick={() => this.begin()}>
-          Click to Start
-        </button>
-        <button id="largebutton" onClick={() => this.stop()}>
-          Click to Stop
-        </button>
+
         <button id="largebutton" onClick={() => this.reset()}>
           Play Again
         </button>
@@ -443,3 +439,11 @@ class App extends Component {
 }
 
 export default App;
+
+/*
+ <button id="largebutton" onClick={() => this.begin()}>
+          Click to Start
+        </button>
+        <button id="largebutton" onClick={() => this.stop()}>
+          Click to Stop
+        </button>*/
